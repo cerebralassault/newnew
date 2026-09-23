@@ -25,5 +25,15 @@ Disconnect-VIServer -Server $vCenters -Confirm:$false
 
 $cores | Format-Table -AutoSize
 
+$cores | Group-Object OperatingSystem | ForEach-Object {
+    $edition = $_.Name -replace '^Windows Server 2016 '
+    $found = @($_.Group | Where-Object Cores)
+    $total = [int]($found | Measure-Object Cores -Sum).Sum
+    $line = "$edition - $($_.Count) servers - $total cores"
+    $missing = $_.Count - $found.Count
+    if ($missing) { $line += " ($missing not found in vSphere)" }
+    $line
+}
+Write-Host
 $csv = Read-Host "Save results to CSV (leave blank to skip)"
 if ($csv) { $cores | Export-Csv $csv -NoTypeInformation }
