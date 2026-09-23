@@ -1,9 +1,10 @@
 $domains = (Read-Host "Domains to search (comma-separated)") -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+$filter = 'OperatingSystem -like "Windows Server 2016 Standard*" -or OperatingSystem -like "Windows Server 2016 Datacenter*"'
 
 $servers = foreach ($d in $domains) {
     $cred = Get-Credential -Message "Credentials for $d"
     try {
-        Get-ADComputer -Server $d -Credential $cred -Filter 'OperatingSystem -like "Windows Server 2016 Standard*"' -Properties OperatingSystem |
+        Get-ADComputer -Server $d -Credential $cred -Filter $filter -Properties OperatingSystem |
             Select-Object @{n = 'Domain'; e = { $d } }, Name, OperatingSystem
     }
     catch {
@@ -16,5 +17,5 @@ $servers = $servers | Sort-Object Domain, Name
 $servers | Format-Table -AutoSize
 
 New-Item -ItemType Directory -Path C:\temp -Force | Out-Null
-$servers | Export-Csv C:\temp\standard2016.csv -NoTypeInformation
-Write-Host "Saved to C:\temp\standard2016.csv"
+$servers | Export-Csv C:\temp\server2016.csv -NoTypeInformation
+Write-Host "Saved to C:\temp\server2016.csv"
