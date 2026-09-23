@@ -4,7 +4,7 @@ $filter = 'OperatingSystem -like "Windows Server 2016 Standard*" -or OperatingSy
 $servers = foreach ($d in $domains) {
     $cred = Get-Credential -Message "Credentials for $d"
     try {
-        Get-ADComputer -Server $d -Credential $cred -Filter $filter -Properties OperatingSystem |
+        Get-ADComputer -Server $d -Credential $cred -Filter $filter -Properties OperatingSystem -ErrorAction Stop |
             Select-Object @{n = 'Domain'; e = { $d } }, Name, OperatingSystem
     }
     catch {
