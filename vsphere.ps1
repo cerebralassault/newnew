@@ -2,7 +2,7 @@ $vCenters = (Read-Host "vCenter servers (comma-separated)") -split ',' | ForEach
 $servers = Import-Csv C:\temp\server2016.csv
 
 foreach ($vc in $vCenters) {
-    Connect-VIServer -Server $vc -Credential (Get-Credential -Message "Credentials for $vc") | Out-Null
+    Connect-VIServer -Server $vc -Credential (Get-Credential -Message "Credentials for $vc") -ErrorAction Stop | Out-Null
 }
 
 # VM names don't always match the AD name, so also key on the guest's hostname
