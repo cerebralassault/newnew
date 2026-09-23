@@ -15,13 +15,8 @@ foreach ($vm in Get-VM -Server $vCenters) {
 $cores = foreach ($server in $servers) {
     $vm = $vms[$server.Name]
     [pscustomobject]@{
-        Domain          = $server.Domain
-        Name            = $server.Name
-        OperatingSystem = $server.OperatingSystem
-        Found           = [bool]$vm
-        VMName          = $vm.Name
-        Cores           = $vm.NumCpu
-        CoresPerSocket  = $vm.CoresPerSocket
+        Name  = $server.Name
+        Cores = $vm.NumCpu
     }
 }
 
